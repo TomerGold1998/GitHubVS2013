@@ -17,7 +17,7 @@ namespace Main
         {
             Console.WriteLine("Started");
 
-
+            /*
              DateTime d = new DateTime(1998,7,25);
               Worker w = new Worker("206949158", "Tomer", "Goldberg", d, "Mivza Nacshon", "Modiin", 35, 2, 2, EmployeesType.Salesman);
               WorkerDB Wdb = new WorkerDB();
@@ -31,7 +31,7 @@ namespace Main
               Cdb.AddCustomer(c);
               Console.WriteLine("Done!");
               Console.ReadKey();   // Works for Customer!
-           
+           */
 
 
         }
