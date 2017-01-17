@@ -8,6 +8,6 @@ namespace DBAcsses
 {
     public interface IEntity   
     {       
-        void populate(DataRow dataRow);
+      void populate(DataRow dataRow);
     }
 }

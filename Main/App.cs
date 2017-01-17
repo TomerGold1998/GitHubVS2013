@@ -29,16 +29,16 @@ namespace Main
         public App()
         {
             Console.WriteLine("Loading App");
-            workerDB = new WorkerDB();
-            employyesHoursDB = new EmployesHoursDB();
-            customerDB = new CustomerDB();
-            playDB = new PlayDB();
-            showDB = new ShowDB();
-            auditoriumDB = new AuditoriumDB();
-            actorInShowDB = new ActorsInShowsDB();
-            subscriptionDB = new SubscriptionDB();
-            ticketDB = new TicketDB();
-            ticketSubscrioptionDB = new TicketSubscriptionDB();
+            this.workerDB = new WorkerDB();
+            this.employyesHoursDB = new EmployesHoursDB();
+            this.customerDB = new CustomerDB();
+            this.playDB = new PlayDB();
+            this.showDB = new ShowDB();
+            this.auditoriumDB = new AuditoriumDB();
+            this.actorInShowDB = new ActorsInShowsDB();
+            this.subscriptionDB = new SubscriptionDB();
+            this.ticketDB = new TicketDB();
+            this.ticketSubscrioptionDB = new TicketSubscriptionDB();
 
             Console.WriteLine("Done");
 
@@ -81,13 +81,205 @@ namespace Main
 
         }
 
+
+
+        #region Employees Mangagment
+
         private void OpenWorkersMannagmentView()
+        {
+
+            Console.WriteLine("");
+            Console.WriteLine("Welcome to employees managment, please choose an action from the following list(q to quit, b to go back to the main screen)");
+            Console.WriteLine("To add a new employee, Press 1.");
+            Console.WriteLine("To see the full list of all the employees, Press 2.");
+            Console.WriteLine("To get search employee data by ID, Press 3.");
+            Console.WriteLine("To add employee hours of work, Press 4");
+            Console.WriteLine("To cauclate Employee salary, Press 5");
+            string Choice = Console.ReadLine().ToLower();
+
+            switch (Choice)
+            {
+                case "q": return;
+
+                case "b": InitApp();
+                    break;
+                case "1": AddNewEmployee();
+                    break;
+                case "2": ListOfAllEmployees();
+                    break;
+                case "3": EmployeeDataByID();
+                    break;
+                case "4": AddNewEmployeeHours();
+                    break;
+                case "5": CaucalteEmployeeSalary();
+                    break;
+                default: Console.WriteLine("Invalid choice"); OpenWorkersMannagmentView();
+                    break;
+            }
+
+
+
+        }
+
+        private void CaucalteEmployeeSalary()
         {
 
         }
 
+        private void AddNewEmployeeHours()
+        {
+
+        }
+
+        private void EmployeeDataByID()
+        {
+
+        }
+
+        private void ListOfAllEmployees()
+        {
+
+        }
+
+        private void AddNewEmployee()
+        {
+            Console.WriteLine("You Chose to add a new employee you can go back to the Employee managment by writing b on the employee ID column");
+            Console.WriteLine("Enter new Employee ID: ");
+            string EmployeeID = Console.ReadLine().ToLower();
+            if (EmployeeID == "b")
+            {
+                OpenWorkersMannagmentView();
+            }
+            else
+            {
+                if (EmployeeID.Length == 9 && !workerDB.Find(EmployeeID))
+                {
+                    Console.WriteLine("Enter employee first name");
+                    string EmployeeFirstName = Console.ReadLine();
+                    Console.WriteLine("Enter employee last name");
+                    string EmployeeLastName = Console.ReadLine();
+
+                    DateTime EmployeeDateOfBirth;
+                    do{
+                    Console.WriteLine("Enter employee date of birth");                     
+                    }while(!DateTime.TryParse(Console.ReadLine(),out EmployeeDateOfBirth));
+                 
+                    
+                    Console.WriteLine("Enter employee address");
+                    string EmployeeAdress = Console.ReadLine();
+                    Console.WriteLine("Enter employee City");
+                    string EmployeeCity = Console.ReadLine();
+
+                    double EmployeeHourSalary;
+                    do
+                    {
+                        Console.WriteLine("Enter employee hour salary");
+                    }
+                    while (!double.TryParse(Console.ReadLine(), out EmployeeHourSalary));
+
+                    int EmployeeLevel;
+                    do
+                    {
+                        Console.WriteLine("Enter employee level");
+                    }
+                    while (!int.TryParse(Console.ReadLine(), out EmployeeLevel));
+
+                    int EmployeeExspreince;
+                    do
+                    {
+                        Console.WriteLine("Enter employee exprince(in years)");
+                    }
+                    while (!int.TryParse(Console.ReadLine(), out EmployeeExspreince));
+
+                    string EmployeeType = "";
+                    
+                    do
+                    {  
+                        Console.WriteLine("Enter employee type: (Salesman, Adminstration , Actor , Director)");
+                        EmployeeType = Console.ReadLine();
+                    } while (EmployeeType != "Salesman" && EmployeeType != "Adminstration" && EmployeeType != "Actor" && EmployeeType != "Director");
+
+                    EmployeesType RealType;
+                    switch (EmployeeType)
+                    {
+                        case "Salesman": RealType = EmployeesType.Salesman;
+                            break;
+                        case "Adminstration": RealType = EmployeesType.Adminstration;
+                            break;
+                        case "Actor": RealType = EmployeesType.Actor;
+                            break;
+                        case "Director": RealType = EmployeesType.Director;
+                            break;
+                        default: RealType = EmployeesType.Salesman;
+                            break;
+                    }
+
+                    if (RealType == EmployeesType.Actor)
+                    {
+                        string actorLeve = "";
+                        do
+                        {
+                            Console.WriteLine("Enter Actor level: ( Lead , Secondary , starting , Extra)");
+                            actorLeve = Console.ReadLine();
+                        } while (actorLeve != "Lead" && actorLeve != "Secondary" && actorLeve != "starting" && actorLeve != "Extra");
+
+                        ActorLevel RealActorLevel;
+                        switch (actorLeve)
+                        {
+                            case "Lead": RealActorLevel = ActorLevel.Lead;
+                                break;
+                            case "Secondary": RealActorLevel = ActorLevel.Secondary;
+                                break;
+                            case "starting": RealActorLevel = ActorLevel.starting;
+                                break;
+                            case "Extra": RealActorLevel = ActorLevel.Extra;
+                                break;
+                            default: RealActorLevel = ActorLevel.Extra;
+                                break;
+                        }
+
+                        Worker w = new Actor(EmployeeID, EmployeeFirstName, EmployeeLastName, EmployeeDateOfBirth, EmployeeAdress, EmployeeCity, EmployeeHourSalary, EmployeeLevel, EmployeeExspreince, RealActorLevel);
+                        workerDB.AddWorker(w);
+                        Console.WriteLine("Added new actor : " + w.ToString());
+
+                    }
+                    else
+                    {
+                        if (RealType == EmployeesType.Director)
+                        {
+                            Worker w = new Director(EmployeeID, EmployeeFirstName, EmployeeLastName, EmployeeDateOfBirth, EmployeeAdress, EmployeeCity, EmployeeHourSalary, EmployeeLevel, EmployeeExspreince);
+                            workerDB.AddWorker(w);
+                            Console.WriteLine("Added new director : " + w.ToString());
+                        }
+                        else
+                        {
+                            if (RealType == EmployeesType.Adminstration)
+                            {
+                                Worker w = new Adminstration(EmployeeID, EmployeeFirstName, EmployeeLastName, EmployeeDateOfBirth, EmployeeAdress, EmployeeCity, EmployeeHourSalary, EmployeeLevel, EmployeeExspreince);
+                                Console.WriteLine("Added new Admin : " + w.ToString());
+                            }
+                            else
+                            {
+                                Worker w = new Worker(EmployeeID, EmployeeFirstName, EmployeeLastName, EmployeeDateOfBirth, EmployeeAdress, EmployeeCity, EmployeeHourSalary, EmployeeLevel, EmployeeExspreince,RealType);
+                                Console.WriteLine("Added new worker : " + w.ToString());
+                            }
+
+ 
+                        }
+                    }
 
 
+                    OpenWorkersMannagmentView();
+
+                }
+                else
+                {
+                    Console.WriteLine("Invalid ID.. ");
+                    AddNewEmployee();
+                }
+            }
+        } //Done
+        #endregion
 
         private int GetDepartment()
         {

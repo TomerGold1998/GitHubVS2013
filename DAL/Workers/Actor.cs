@@ -9,7 +9,6 @@ namespace DAL
     public class Actor : Worker
     {
         public ActorLevel ActorLevel;
-        private System.Data.DataRow dataRow;
 
         public Actor(string ID, string FirstName, string LastName, DateTime DateOfBirth, string Adress, string wCity 
             , double hourlySalry, int DirectorLvl, int DirectorEx, ActorLevel level) 
@@ -21,7 +20,7 @@ namespace DAL
         public Actor(System.Data.DataRow dataRow) 
             :base(dataRow)
         {
-      
+            this.ActorLevel = dataRow["ActorLevel"].ToString() == ActorLevel.Lead.ToString() ? ActorLevel.Lead : dataRow["ActorLevel"].ToString() == ActorLevel.Secondary.ToString() ? ActorLevel.Secondary : dataRow["ActorLevel"].ToString() == ActorLevel.starting.ToString() ? ActorLevel.starting : DAL.ActorLevel.Extra; 
         }
 
         public override double CalcSalary(int workingHours, int WorkingDays)
@@ -34,6 +33,12 @@ namespace DAL
             {
                 return base.CalcSalary(workingHours, WorkingDays);
             }
+        }
+
+        public override void populate(System.Data.DataRow dr)
+        {
+            dr["ActorLevel"] = this.ActorLevel.ToString();
+            base.populate(dr);
         }
     }
 

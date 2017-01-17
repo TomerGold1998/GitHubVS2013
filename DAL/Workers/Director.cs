@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DAL
 {
-    public class Director:Worker
+    public class Director : Worker
     {
         public Director(string ID, string FirstName,  string LastName, DateTime DateOfBirth, string Adress, string wCity 
             , double hourlySalry, int DirectorLvl, int DirectorEx) 
@@ -18,6 +18,8 @@ namespace DAL
         {
       
         }
+
+
 
         public override double CalcSalary(int workingHours, int WorkingDays)
         {

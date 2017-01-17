@@ -64,7 +64,7 @@ namespace DAL
            this.type = dr["type"].ToString() == EmployeesType.Actor.ToString() ? EmployeesType.Actor : dr["type"].ToString() == EmployeesType.Adminstration.ToString() ? EmployeesType.Adminstration : dr["type"].ToString() == EmployeesType.Director.ToString() ? EmployeesType.Director : EmployeesType.Salesman;
 
        }
-       public void populate(System.Data.DataRow dr)
+       public virtual void populate(System.Data.DataRow dr)
        {
            dr["ID"] = this.ID;
            dr["FirstName"] = this.FirstName;

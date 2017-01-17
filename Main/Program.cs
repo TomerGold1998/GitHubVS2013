@@ -9,15 +9,12 @@ namespace Main
 {
     class Program
     {
-
-       
-
         static void Main(string[] args)
         {
             try
             {
                 App app = new App();
-              
+                Console.ReadLine();
             }
             catch (Exception ex)
             {
