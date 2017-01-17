@@ -8,7 +8,7 @@ using System.Data;
 
 namespace DAL.Subscriptions
 {
-    class TicketSubscription : IEntity
+ public   class TicketSubscription : IEntity
     {
         public static string SubscriptionRelation = "TicketSubscriptionToSubscriptionRelation";
         public static string TicketRelation = "TicketSubscriptionToTicketRelation";

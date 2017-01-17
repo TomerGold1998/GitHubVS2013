@@ -9,7 +9,7 @@ using System.Data;
 
 namespace DAL.Subscriptions
 {
-    class Ticket : IEntity
+  public class Ticket : IEntity
     {
         public static string ShowRelation = "TicketToShowRelation";
 

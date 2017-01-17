@@ -8,7 +8,7 @@ using DBAcsses;
 
 namespace DAL.Subscriptions
 {
-    class TicketSubscriptionDB : GeneralTable
+  public  class TicketSubscriptionDB : GeneralTable
     {
         public TicketSubscriptionDB()
             : base("TicketSubscription", "ID")

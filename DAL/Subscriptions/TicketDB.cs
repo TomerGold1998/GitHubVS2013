@@ -8,7 +8,7 @@ using System.Data;
 
 namespace DAL.Subscriptions
 {
-    class TicketDB : GeneralTable
+  public  class TicketDB : GeneralTable
     {
         public TicketDB()
             : base("Ticket", "TicketID")

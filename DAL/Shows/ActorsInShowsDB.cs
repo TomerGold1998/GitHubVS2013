@@ -8,7 +8,7 @@ using System.Data;
 
 namespace DAL.Shows
 {
-    class ActorsInShowsDB : GeneralTable
+   public class ActorsInShowsDB : GeneralTable
     {
         public ActorsInShowsDB()
             : base("ActorsInShow", "ID")

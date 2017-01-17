@@ -9,7 +9,7 @@ using System.Data;
 
 namespace DAL.Subscriptions 
 {
-    class Subscription : IEntity
+  public  class Subscription : IEntity
     {
         public static string CustomerRelation = "SubscriptionToCustomerRelation";
         public string ID { get; set; }

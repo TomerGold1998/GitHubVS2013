@@ -8,7 +8,7 @@ using System.Data;
 
 namespace DAL.Subscriptions
 {
-    class SubscriptionDB : GeneralTable
+   public class SubscriptionDB : GeneralTable
     {
         public SubscriptionDB()
             : base("Subscription", "ID")

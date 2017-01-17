@@ -15,7 +15,39 @@ namespace Main
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Started");
+            try
+            {
+                Console.WriteLine("System loading..");
+                WorkerDB WorkerDB = new WorkerDB();
+                EmployesHoursDB EmployyesHoursDB = new EmployesHoursDB();
+                CustomerDB CustomerDB = new CustomerDB();
+
+                PlayDB PlayDB = new PlayDB();
+                ShowDB ShowDB = new ShowDB();
+                ActorsInShowsDB ActorInShowDB = new ActorsInShowsDB();
+
+                SubscriptionDB SubscriptionDB = new SubscriptionDB();
+                TicketDB TicketDB = new TicketDB();
+                TicketSubscriptionDB TicketSubscrioptionDB = new TicketSubscriptionDB();
+                Console.WriteLine("Done!");
+
+                Console.WriteLine();
+                Console.WriteLine();
+                int DepartmentChoice = GetDepartment();
+                if (DepartmentChoice == -1)
+                {
+                    return;
+                }
+                else
+                {
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error had occuerd, Error information : {0}", ex.Message);
+                Console.ReadLine();
+            }
 
             /*
              DateTime d = new DateTime(1998,7,25);
@@ -34,6 +66,20 @@ namespace Main
            */
 
 
+        }
+
+        private static int GetDepartment()
+        {
+            Console.WriteLine("For workers mannagemnt, Press 1. For Shows and Plays mannagment, Press 2. For Customers and Subscription Mannagment, Press 3. (q to exit)");
+            string choice = Console.ReadLine().ToLower();
+            switch(choice)
+            {
+                case "q": return -1;
+                case "1": return 1;
+                case "2": return 2;
+                case "3": return 3;
+                default: Console.WriteLine("Invalid choice"); return GetDepartment();
+            }
         }
     }
 }

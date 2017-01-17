@@ -17,20 +17,28 @@ namespace DAL.Shows
         public string ID { get; set; }
         public Actor Actor { get; set; }
         public Show Show { get; set; }
+        public ActorInShowRole Role { get; set; }
 
         public ActorsInShow(DataRow dataRow)
         {
             this.ID = dataRow["ID"].ToString();
             this.Actor = new Actor(dataRow.GetParentRow(ActorsInShow.relationActor));
             this.Show = new Show(dataRow.GetParentRow(ActorsInShow.relatioShow));
+            this.Role = dataRow["Role"].ToString() == ActorInShowRole.Main.ToString() ? ActorInShowRole.Main : dataRow["Role"].ToString() == ActorInShowRole.Secondary.ToString() ? ActorInShowRole.Secondary : ActorInShowRole.Side; 
         }
         public void populate(DataRow dataRow)
         {
             dataRow["ID"] = this.ID;
             dataRow["Actor"] = this.Actor.ID;
             dataRow["Show"] = this.Show.ID;
+            dataRow["Role"] = this.Role.ToString();
         }
 
 
+    }
+
+    public enum ActorInShowRole
+    {
+        Main, Secondary , Side
     }
 }
