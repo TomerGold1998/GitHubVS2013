@@ -7,7 +7,7 @@ using DBAcsses;
 
 namespace DAL.Shows
 {
-    class AuditoriumDB :  GeneralTable
+  public  class AuditoriumDB :  GeneralTable
     {
         public AuditoriumDB() : base("Auditorium", "ID") { }
 
