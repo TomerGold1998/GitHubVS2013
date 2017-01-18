@@ -29,5 +29,32 @@ namespace DAL
         {
             base.AddRow(w);
         }
+
+        public List<Worker> GetAllWorkers()
+        {
+            try
+            {
+                this.GoToFirst();
+                Worker Current = new Worker();
+                List<Worker> list = new List<Worker>();
+
+                for (int i = 0; i < this.LengthOfTable; i++)
+                {
+                    Current = this.GetCurrentRowData();
+                    if (Current != null)
+                    {
+                        list.Add(Current);
+                        this.MoveNext();
+                    }
+                }
+
+                return list;
+            }
+            catch (Exception ex)
+            {
+                return new List<Worker>();
+            }
+        }
+        
     }
 }

@@ -21,7 +21,7 @@ namespace DAL
         protected double hourSalary;
         protected int employeeLevel;
         protected int employeeExperince;
-        protected EmployeesType type;
+        public EmployeesType type;
 
        #endregion
        public Worker(string id, string firstName , string lastName , DateTime dateOfBirth, string Adress , string city , double hourlySalray, int empoyeeLvl , int employeeExp, EmployeesType Type)
@@ -63,6 +63,11 @@ namespace DAL
            this.employeeExperince = int.Parse(dr["employeeExperince"].ToString());
            this.type = dr["type"].ToString() == EmployeesType.Actor.ToString() ? EmployeesType.Actor : dr["type"].ToString() == EmployeesType.Adminstration.ToString() ? EmployeesType.Adminstration : dr["type"].ToString() == EmployeesType.Director.ToString() ? EmployeesType.Director : EmployeesType.Salesman;
 
+       }
+
+       public Worker()
+       {
+           // TODO: Complete member initialization
        }
        public virtual void populate(System.Data.DataRow dr)
        {

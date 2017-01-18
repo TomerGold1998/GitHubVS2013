@@ -91,7 +91,7 @@ namespace DBAcsses
             }
             catch (OleDbException ex)
             {
-              //  MessageBox.Show(ex.Message);
+              Console.WriteLine(ex.Message);
             }
             }
 

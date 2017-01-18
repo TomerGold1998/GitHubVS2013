@@ -83,7 +83,7 @@ namespace Main
 
 
 
-        #region Employees Mangagment
+        #region Employees Mangagment 
 
         private void OpenWorkersMannagmentView()
         {
@@ -119,27 +119,129 @@ namespace Main
 
 
 
-        }
+        } //Done
 
         private void CaucalteEmployeeSalary()
-        {
+       {
+            Console.WriteLine("Enter Employee ID, b to back");
+            string EmployeeID = Console.ReadLine().ToLower();
+            if (EmployeeID == "b")
+            {
+                OpenWorkersMannagmentView();
+            }
+            else
+            {
+                if (!workerDB.Find(EmployeeID))
+                {
+                    Console.WriteLine("Could not find the Employee by that ID");
+                    CaucalteEmployeeSalary();
 
-        }
+                }
+                else
+                {
+                    Worker w = new Worker(workerDB.FindRow(EmployeeID));
+
+                    DateTime FromCaucaltion;
+                    do
+                    {
+                        Console.WriteLine("Enter the date you want to caculate from the employee salaray");
+                    } while (!DateTime.TryParse(Console.ReadLine(),out FromCaucaltion));
+
+                    Console.WriteLine("The employee salary is: "+employyesHoursDB.CaculateEmployeeSalary(FromCaucaltion, w)+"NIS");
+
+                }
+            }
+        } //Done
 
         private void AddNewEmployeeHours()
         {
+            Console.WriteLine("Enter Employee ID, b to back");
+            string EmployeeID = Console.ReadLine().ToLower();
+            if (EmployeeID == "b")
+            {
+                OpenWorkersMannagmentView();
+            }
+            else
+            {
+                if (!workerDB.Find(EmployeeID))
+                {
+                    Console.WriteLine("Could not find the Employee by that ID");
+                    AddNewEmployeeHours();
 
-        }
+                }
+                else
+                {
+                 Worker w = new Worker(workerDB.FindRow(EmployeeID));
+
+                 int Date = 0;
+                 do
+                 {
+                     Console.WriteLine("Enter Date in this month(1-31)");
+                 } while (!int.TryParse(Console.ReadLine(), out Date) && Date >=1 & Date <= 31);
+
+                 int StartHour = 0;
+                 do
+                 {
+                     Console.WriteLine("Enter Start Hour(0-23)");
+                 } while (!int.TryParse(Console.ReadLine(), out StartHour) && StartHour >= 0 & StartHour < 24);
+
+                 int EndHour = 0;
+                 do
+                 {
+                     Console.WriteLine("Enter end Hour(0-24)");
+                 } while (!int.TryParse(Console.ReadLine(), out EndHour) && EndHour >= 0 & EndHour < 24 && EndHour >= StartHour);
+
+                 DateTime DateOfWork = new DateTime(DateTime.Now.Year, DateTime.Now.Month, Date);
+                 DateTime from = new DateTime(DateTime.Now.Year, DateTime.Now.Month, Date, StartHour, 0, 0);
+                 DateTime to = new DateTime(DateTime.Now.Year, DateTime.Now.Month, Date, EndHour, 0, 0);
+
+                 EmployesHours eh = new EmployesHours(w,DateOfWork,from,to);
+                 this.employyesHoursDB.AddEmployesHours(eh);
+
+                 Console.WriteLine("Added employee hours");
+                 OpenWorkersMannagmentView();
+                 
+                }
+            }
+        } //Done
 
         private void EmployeeDataByID()
         {
+            Console.WriteLine("Enter Employee ID, b to back");
+            string EmployeeID = Console.ReadLine().ToLower();
+            if (EmployeeID == "b")
+            {
+                OpenWorkersMannagmentView();
+            }
+            else
+            {
+                if (!workerDB.Find(EmployeeID))
+                {
+                    Console.WriteLine("Could not find the Employee by that ID");
+                    EmployeeDataByID();
 
-        }
+                }
+                else
+                {
+                    Console.WriteLine("Worker : {0}",new Worker(workerDB.FindRow(EmployeeID)).ToString());
+                }
+            }
+            Console.WriteLine();
+            OpenWorkersMannagmentView();
+
+        } //Done
 
         private void ListOfAllEmployees()
         {
-
-        }
+            Console.WriteLine();
+            Console.WriteLine("All workers:");
+            foreach (Worker w in workerDB.GetAllWorkers())
+            {
+                Console.WriteLine(w.ToString());
+            }
+            Console.WriteLine();
+            OpenWorkersMannagmentView();
+        } //Done
 
         private void AddNewEmployee()
         {
@@ -279,7 +381,7 @@ namespace Main
                 }
             }
         } //Done
-        #endregion
+        #endregion /
 
         private int GetDepartment()
         {

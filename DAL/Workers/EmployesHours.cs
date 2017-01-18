@@ -14,42 +14,47 @@ namespace DAL.Workers
 
         public string ID;
         public Worker worker;
-        public DateTime From;
-        public DateTime To;
+        public DateTime DateOfWork;
+        public DateTime FromHour;
+        public DateTime ToHour;
 
-
-        public EmployesHours(Worker w, DateTime  from, DateTime to)
+        public EmployesHours(Worker w, DateTime dateOfWork, DateTime fromHour, DateTime toHour)
         {
-            this.ID = new Guid().ToString();
+            this.ID = Guid.NewGuid().ToString().Substring(0,7);
             this.worker = w;
-            this.From = from;
-            this.To = to;
+            this.DateOfWork = dateOfWork;
+            this.FromHour = fromHour;
+            this.ToHour= toHour;
         }
-        public EmployesHours(Worker w, int Year , int Month , int Day, int FromHour ,int ToHour)
-        {
-            this.ID = new Guid().ToString();
-            this.worker = w;
-            this.From = new DateTime(Year, Month, Day, FromHour,0,0);
-            this.To = new DateTime(Year, Month, Day, ToHour, 0, 0);
+     
 
-        }
+
         public EmployesHours(System.Data.DataRow dataRow)
         {
             this.ID = dataRow["ID"].ToString();
             this.worker = new Worker(dataRow.GetParentRow(relationWorker));
-            this.From = DateTime.Parse(dataRow["From"].ToString());
-            this.To = DateTime.Parse(dataRow["To"].ToString());
+            this.DateOfWork = DateTime.Parse(dataRow["DateOfWork"].ToString());
+            this.FromHour = DateTime.Parse(dataRow["FromHour"].ToString());
+            this.ToHour = DateTime.Parse(dataRow["ToHour"].ToString());
+        }
+
+        public EmployesHours()
+        {
+            // TODO: Complete member initialization
         }
         public void populate(System.Data.DataRow dataRow)
         {
+           
+
             dataRow["ID"] = this.ID;
             dataRow["worker"] = this.worker.ID;
-            dataRow["From"] = this.From.ToString("MM/dd/yy HH:mm:ss tt");
-            dataRow["To"] = this.To.ToString("MM/dd/yy HH:mm:ss tt");
+            dataRow["DateOfWork"] = this.DateOfWork.ToShortDateString();
+            dataRow["FromHour"] = this.FromHour.ToShortTimeString();
+            dataRow["ToHour"] = this.ToHour.ToShortTimeString();
         }
         public int CaucalateHours()
         {
-            return To.Hour - From.Hour;
+            return ToHour.Hour - FromHour.Hour;
         }
       
     
