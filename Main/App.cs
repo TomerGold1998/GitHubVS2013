@@ -175,8 +175,6 @@ namespace Main
             }
 
         }
-
-
         private void AddShowsToPlay()
         {
             Play p = new Play();
@@ -201,25 +199,82 @@ namespace Main
                 }
                 p = new Play(playDB.FindRow(PlayID));
 
-                DateTime DateOfShow;
-                do
-                {
-                    Console.WriteLine("Enter the date of the show  (MM/DD/YYYY Format):" );
-                } while (!DateTime.TryParse(Console.ReadLine(), out DateOfShow));
+                List<Auditorium> allAvialbeAuditriums = new List<Auditorium>();
+                bool quitAndGoBack = false;
+                DateTime DateOfShow = new DateTime();
+                DateTime HourStartOFTheShow = new DateTime();
+                DateTime HourEndOFTheShow = new DateTime();
 
-                DateTime HourStartOFTheShow;
-                do
+                while (allAvialbeAuditriums.Count == 0 && !quitAndGoBack)
                 {
-                    Console.WriteLine("When does the show starts?  (HH:mm Format):");
-                } while (!DateTime.TryParse(Console.ReadLine(), out HourStartOFTheShow));
 
-                DateTime HourEndOFTheShow;
-                do
+                    do
+                    {
+                        Console.WriteLine("Enter the date of the show  (MM/DD/YYYY Format):");
+                    } while (!DateTime.TryParse(Console.ReadLine(), out DateOfShow));
+                    do
+                    {
+                        Console.WriteLine("When does the show starts?  (HH:mm Format):");
+                    } while (!DateTime.TryParse(Console.ReadLine(), out HourStartOFTheShow));
+                    do
+                    {
+                        Console.WriteLine("When does the show ends?  (HH:mm Format):");
+                    } while (!DateTime.TryParse(Console.ReadLine(), out HourEndOFTheShow));
+
+                    Console.WriteLine("Searching for availabe auditorims for the show times : {0} from {1} to {2}", DateOfShow.ToShortDateString(), HourStartOFTheShow.ToShortTimeString(), HourEndOFTheShow.ToShortTimeString());
+                    allAvialbeAuditriums = showDB.getAllOpenAuditorimsForShow(DateOfShow, HourStartOFTheShow, HourEndOFTheShow);
+                    if (allAvialbeAuditriums.Count == 0)
+                    {
+                        Console.WriteLine("Could not find any availabe auditorum for the show, try again with diffrent hours? (y/n)");
+                        if (Console.ReadLine().ToLower() == "n")
+                        {
+                            quitAndGoBack = true;
+                        }
+                    }
+                }
+                if (quitAndGoBack)
                 {
-                    Console.WriteLine("When does the show ends?  (HH:mm Format):");
-                } while (!DateTime.TryParse(Console.ReadLine(), out HourEndOFTheShow));
-                Console.WriteLine("Searching for availabe auditorims for the show times : {0} from {1} to {2}",DateOfShow.ToShortDateString(),HourStartOFTheShow.ToShortTimeString(),HourEndOFTheShow.ToShortTimeString());
-                
+                    OpenShowsAndPlaysMannagment();
+                }
+                else
+                {
+                    Console.WriteLine("All possible auditruioms :");
+                    int index = 1;
+                    foreach (Auditorium a in allAvialbeAuditriums)
+                    {
+                        Console.WriteLine("{0}) -> {1}", index, a.ToString());
+                        index++;
+                    }
+                    Console.WriteLine("Please write the auditrium number");
+                    string ans = Console.ReadLine();
+                    if (int.TryParse(ans, out index))
+                    {
+                        if (index >= 1 && index <= allAvialbeAuditriums.Count)
+                        {
+                            Auditorium ChossenPlace = allAvialbeAuditriums[index - 1];
+                            Show s = new Show();
+                            s.ID = Guid.NewGuid().ToString().Substring(0, 7);
+                            s.Play = p;
+                            s.PlayPlace = ChossenPlace;
+                            s.AtDate = DateOfShow;
+                            s.FromTime = HourStartOFTheShow;
+                            s.ToTime = HourEndOFTheShow;
+                            showDB.AddShow(s);
+                            Console.WriteLine("Show added!");
+                            OpenShowsAndPlaysMannagment();
+                        }
+                        else
+                        {
+                            Console.WriteLine("Error- not a valid auditorui number");
+                            OpenShowsAndPlaysMannagment();
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Error- not a valid auditorui number");
+                        OpenShowsAndPlaysMannagment();
+                    }
+                }
 
 
             }
@@ -231,7 +286,6 @@ namespace Main
         {
 
         }
-
         private void ShowAllPlayList()
         {
             Console.WriteLine();
@@ -270,19 +324,19 @@ namespace Main
                 do
                 {
                     Console.WriteLine("Enter auditoruim style( Regular , Cirular)");
-                  style=  Console.ReadLine();
+                    style = Console.ReadLine();
                 } while (style != "Regular" && style != "Cirular");
 
                 AuditoriumStyle RealStyle = style == "Regular" ? AuditoriumStyle.Regular : AuditoriumStyle.Cirular;
-              
+
                 string type = "";
                 do
                 {
                     Console.WriteLine("Enter auditoruim type(Regular,Public,Siesta)");
-                  type=  Console.ReadLine();
+                    type = Console.ReadLine();
                 } while (type != "Regular" && type != "Public" && type != "Siesta");
 
-                AuditoriumType RealType = type == "Regular" ? AuditoriumType.Regular : type == "Public" ?  AuditoriumType.Public : AuditoriumType.Siesta;
+                AuditoriumType RealType = type == "Regular" ? AuditoriumType.Regular : type == "Public" ? AuditoriumType.Public : AuditoriumType.Siesta;
 
 
                 a.ID = Guid.NewGuid().ToString().Substring(0, 7);

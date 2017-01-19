@@ -8,18 +8,18 @@ using System.Data;
 
 namespace DAL.Shows
 {
-   public class Auditorium : IEntity
+    public class Auditorium : IEntity
     {
         public string ID { get; set; }
-        public string a_Name{get;set;}
+        public string a_Name { get; set; }
         public int NumberOfRows { get; set; }
-        public int NumberOfSitsInRow {get;set;}
+        public int NumberOfSitsInRow { get; set; }
         public AuditoriumStyle a_Style { get; set; }
         public AuditoriumType a_Type { get; set; }
 
         public Auditorium()
         {
- 
+
         }
 
         public Auditorium(DataRow dr)
@@ -45,18 +45,33 @@ namespace DAL.Shows
             switch (a_Type)
             {
                 case AuditoriumType.Regular: return true;
-                case AuditoriumType.Public :return !((atDate.DayOfWeek == DayOfWeek.Monday || atDate.DayOfWeek == DayOfWeek.Wednesday) && (fromHour.Hour >=14 && fromHour.Hour <= 17));
+                case AuditoriumType.Public: return !((atDate.DayOfWeek == DayOfWeek.Monday || atDate.DayOfWeek == DayOfWeek.Wednesday) && (fromHour.Hour >= 14 && fromHour.Hour <= 17));
                 case AuditoriumType.Siesta: return !((fromHour.Hour >= 14 && fromHour.Hour <= 16) || (atDate.DayOfWeek == DayOfWeek.Friday || atDate.DayOfWeek == DayOfWeek.Saturday));
-                default :return false;
+                default: return false;
             }
         }
+
+        private int CalcNumberOfSits()
+        {
+            switch (this.a_Style)
+            {
+                case AuditoriumStyle.Regular: return NumberOfRows * NumberOfSitsInRow;
+                case AuditoriumStyle.Cirular:  return (int)Math.Floor(Math.PI * Math.Pow(NumberOfRows /2 , 2.0));
+                default: return 0;
+            }
+        }
+
+        public override string ToString()
+        {
+            return String.Format("{0}- {1} Number of rows {2}, Total sits {3} -Style {4}, Type {5}", this.ID, this.a_Name, this.NumberOfRows, this.CalcNumberOfSits(),this.a_Style.ToString(),this.a_Type.ToString());
+            }
     }
     public enum AuditoriumStyle
-    { 
-        Regular , Cirular
+    {
+        Regular, Cirular
     }
     public enum AuditoriumType
-   {
-       Regular,Public,Siesta
-   }
+    {
+        Regular, Public, Siesta
+    }
 }

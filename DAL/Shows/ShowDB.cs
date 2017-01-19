@@ -91,13 +91,16 @@ namespace DAL.Shows
             {
                 if(show.AtDate.ToShortDateString() == atDay.ToShortDateString())
                 {
-                    if (!((show.FromTime.Hour < fromTime.Hour && show.ToTime.Hour <= fromTime.Hour) || (show.FromTime.Hour > toTime.Hour)))
+                    if (show.FromTime.Hour <= fromTime.Hour & show.ToTime.Hour <= toTime.Hour)
                     {
-                        return false;
+                        if (show.PlayPlace.ID == a.ID)
+                        {
+                            return true;
+                        }
                     }
                 }
             }
-            return true;
+            return false;
         }
     }
 }
