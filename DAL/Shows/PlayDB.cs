@@ -38,5 +38,31 @@ namespace DAL.Shows
         {
             base.AddRow(p);
         }
+
+        public List<Play> GetAllPlays()
+        {
+            try
+            {
+                this.GoToFirst();
+                Play Current = new Play();
+                List<Play> list = new List<Play>();
+
+                for (int i = 0; i < this.LengthOfTable; i++)
+                {
+                    Current = this.GetCurrentRowData();
+                    if (Current != null)
+                    {
+                        list.Add(Current);
+                        this.MoveNext();
+                    }
+                }
+
+                return list;
+            }
+            catch (Exception ex)
+            {
+                return new List<Play>();
+            }
+        }
     }
 }

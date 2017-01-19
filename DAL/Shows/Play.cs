@@ -17,7 +17,7 @@ namespace DAL.Shows
         public Director Director { get; set; }
         public string CreatorName { get; set; }
         public DateTime StartDate { get; set; }
-
+     
         public Play(DataRow dataRow)
         {
             this.ID = dataRow["ID"].ToString();
@@ -27,6 +27,11 @@ namespace DAL.Shows
             this.StartDate = DateTime.Parse(dataRow["StartDate"].ToString());
         }
 
+        public Play()
+        {
+            
+        }
+
         public void populate(System.Data.DataRow dataRow)
         {
             dataRow["ID"] = this.ID;
@@ -34,6 +39,11 @@ namespace DAL.Shows
             dataRow["Director"] = this.Director.ID;
             dataRow["CreatorName"] = this.CreatorName;
             dataRow["StartDate"] = this.StartDate.ToShortDateString();
+        }
+
+        public override string ToString()
+        {
+            return string.Format("ID: {0}, Name: {1}, directe by {2} {3} {4}, Creator :{5} , StartDate {6}", this.ID, this.p_Name, this.Director.ID, this.Director.FirstName, this.Director.LastName, this.CreatorName, this.StartDate.ToShortDateString());
         }
     }
 }

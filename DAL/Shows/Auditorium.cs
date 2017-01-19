@@ -17,6 +17,11 @@ namespace DAL.Shows
         public AuditoriumStyle a_Style { get; set; }
         public AuditoriumType a_Type { get; set; }
 
+        public Auditorium()
+        {
+ 
+        }
+
         public Auditorium(DataRow dr)
         {
             this.ID = dr["ID"].ToString();
@@ -34,6 +39,16 @@ namespace DAL.Shows
             dr["NumberOfSitsInRow"] = this.NumberOfSitsInRow.ToString();
             dr["a_Style"] = this.a_Style.ToString();
             dr["a_Type"] = this.a_Type.ToString();
+        }
+        public bool IsAviableTimeToBook(DateTime atDate, DateTime fromHour)
+        {
+            switch (a_Type)
+            {
+                case AuditoriumType.Regular: return true;
+                case AuditoriumType.Public :return !((atDate.DayOfWeek == DayOfWeek.Monday || atDate.DayOfWeek == DayOfWeek.Wednesday) && (fromHour.Hour >=14 && fromHour.Hour <= 17));
+                case AuditoriumType.Siesta: return !((fromHour.Hour >= 14 && fromHour.Hour <= 16) || (atDate.DayOfWeek == DayOfWeek.Friday || atDate.DayOfWeek == DayOfWeek.Saturday));
+                default :return false;
+            }
         }
     }
     public enum AuditoriumStyle

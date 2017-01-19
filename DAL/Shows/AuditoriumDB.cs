@@ -30,5 +30,30 @@ namespace DAL.Shows
         {
             base.AddRow(a);
         }
+        public List<Auditorium> GetAllAuditoriums()
+        {
+            try
+            {
+                this.GoToFirst();
+                Auditorium Current = new Auditorium();
+                List<Auditorium> list = new List<Auditorium>();
+
+                for (int i = 0; i < this.LengthOfTable; i++)
+                {
+                    Current = this.GetCurrentRowData();
+                    if (Current != null)
+                    {
+                        list.Add(Current);
+                        this.MoveNext();
+                    }
+                }
+
+                return list;
+            }
+            catch (Exception ex)
+            {
+                return new List<Auditorium>();
+            }
+        }
     }
 }

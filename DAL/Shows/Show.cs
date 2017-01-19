@@ -16,16 +16,23 @@ namespace DAL.Shows
         public string ID { get; set; }
         public Play Play { get; set; }
         public Auditorium PlayPlace { get; set; }
-        public DateTime FromDateAndHour { get; set; }
-        public DateTime ToDateAndHour { get; set; }
-        
+        public DateTime AtDate { get; set; }
+        public DateTime FromTime { get; set; }
+        public DateTime ToTime { get; set; }  
+
          public Show(DataRow dataRow)
          {
              this.ID = dataRow["ID"].ToString();
              this.Play = new Play(dataRow.GetParentRow(PlayRelation));
              this.PlayPlace = new Auditorium(dataRow.GetParentRow(AuditoriumRelation));
-             this.FromDateAndHour = DateTime.Parse(dataRow["FromDateAndHour"].ToString());
-             this.ToDateAndHour = DateTime.Parse(dataRow["ToDateAndHour"].ToString());
+             this.AtDate = DateTime.Parse(dataRow["AtDate"].ToString());
+             this.FromTime = DateTime.Parse(dataRow["FromTime"].ToString());
+             this.ToTime = DateTime.Parse(dataRow["ToTime"].ToString());
+         }
+
+         public Show()
+         {
+             // TODO: Complete member initialization
          }
         
       
@@ -34,8 +41,9 @@ namespace DAL.Shows
             dataRow["ID"] = this.ID;
             dataRow["Play"] = this.Play.ID;
             dataRow["PlayPlace"] = this.PlayPlace.ID;
-            dataRow["FromDateAndHour"] = this.FromDateAndHour.ToString("MM/dd/yy HH:mm:ss tt");
-            dataRow["ToDateAndHour"] = this.ToDateAndHour.ToString("MM/dd/yy HH:mm:ss tt");
+            dataRow["AtDate"] = this.AtDate.ToShortDateString();
+            dataRow["FromTime"] = this.FromTime.ToShortTimeString();
+            dataRow["ToTime"] = this.ToTime.ToShortTimeString();
         }
     }
 }
