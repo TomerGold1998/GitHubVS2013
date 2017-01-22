@@ -45,5 +45,11 @@ namespace DAL.Shows
             dataRow["FromTime"] = this.FromTime.ToShortTimeString();
             dataRow["ToTime"] = this.ToTime.ToShortTimeString();
         }
+
+
+        public override string ToString()
+        {
+            return String.Format("ID: {0}, Name of play {1} at {2} from {3} to {4}, in auditruim {5}", this.ID, this.Play.p_Name, this.AtDate.ToShortDateString(), this.FromTime.ToShortTimeString(), this.ToTime.ToShortTimeString(), this.PlayPlace.a_Name);
+        }
     }
 }

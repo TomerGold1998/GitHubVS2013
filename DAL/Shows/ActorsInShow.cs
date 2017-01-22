@@ -26,6 +26,11 @@ namespace DAL.Shows
             this.Show = new Show(dataRow.GetParentRow(ActorsInShow.relatioShow));
             this.Role = dataRow["Role"].ToString() == ActorInShowRole.Main.ToString() ? ActorInShowRole.Main : dataRow["Role"].ToString() == ActorInShowRole.Secondary.ToString() ? ActorInShowRole.Secondary : ActorInShowRole.Side; 
         }
+
+        public ActorsInShow()
+        {
+            // TODO: Complete member initialization
+        }
         public void populate(DataRow dataRow)
         {
             dataRow["ID"] = this.ID;
@@ -34,6 +39,11 @@ namespace DAL.Shows
             dataRow["Role"] = this.Role.ToString();
         }
 
+
+        public override string ToString()
+        {
+            return String.Format("Actor {0} {1} in play {2} of show {3} in role {4}", this.Actor.FirstName, this.Actor.LastName, this.Show.Play.p_Name, this.Show.ID, this.Role.ToString());
+        }
 
     }
 

@@ -38,6 +38,32 @@ namespace DAL.Subscriptions
         {
             base.AddRow(t);
         }
+
+        public List<Ticket> GetAllTickets()
+        {
+            try
+            {
+                this.GoToFirst();
+                Ticket Current = new Ticket();
+                List<Ticket> list = new List<Ticket>();
+
+                for (int i = 0; i < this.LengthOfTable; i++)
+                {
+                    Current = this.GetCurrentRowData();
+                    if (Current != null)
+                    {
+                        list.Add(Current);
+                        this.MoveNext();
+                    }
+                }
+
+                return list;
+            }
+            catch (Exception ex)
+            {
+                return new List<Ticket>();
+            }
+        }
     
     }
 }

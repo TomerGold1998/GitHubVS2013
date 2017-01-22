@@ -279,12 +279,126 @@ namespace Main
 
             }
         }
+
         private void ShowInforamtionAboutPlay()
         {
+            Play p = new Play();
+            Console.WriteLine("You Chose to add a new show of a Play you can go back to the Shows and Plays managment by writing b on the play ID");
+            Console.WriteLine("Choose a play from the following list");
+            ShowAllPlayList();
+            Console.WriteLine("Enter Play ID:");
+            string PlayID = Console.ReadLine();
+            if (PlayID == "b")
+            {
+                OpenShowsAndPlaysMannagment();
+            }else
+            {
+                while(!playDB.Find(PlayID))
+                {
+                    Console.WriteLine("Did not find any play with that id, please write the play ID again:");
+                    PlayID = Console.ReadLine();
+                }
+                p = new Play(playDB.FindRow(PlayID));
+
+                List<Show> ShowsOfPlay = showDB.GetAllShows().Where(s => s.Play.ID == p.ID).ToList();
+
+                List<ActorsInShow> ActorInShowOfPlay = actorInShowDB.GetAllActorsInShows().Where(ais => ais.Show.Play.ID == p.ID).ToList();
+                int TotalTicketSoldToThatPlay = ticketDB.GetAllTickets().Where(t => t.Show.Play.ID == p.ID).ToList().Count;
+
+                Console.WriteLine("Basic Play data:");
+                Console.WriteLine(p.ToString());
+                Console.WriteLine();
+                Console.WriteLine("List of play's shows:");
+               
+                foreach (var sop in ShowsOfPlay)
+                {
+                    Console.WriteLine(sop.ToString());
+                }
+                Console.WriteLine();
+                Console.WriteLine("List of all time play's actors: ");
+                foreach(var ais in ActorInShowOfPlay)
+                {
+                    Console.WriteLine(ais.ToString());
+                }
+                Console.WriteLine();
+                Console.WriteLine("Total number of tickets sold to that play " + TotalTicketSoldToThatPlay);
+
+
+                OpenShowsAndPlaysMannagment();
+               
+
+            }
         }
+
         private void AddActorsToAShow()
         {
+            Show s = new Show();
+            Console.WriteLine("You Chose to add a new Actor of a Play to a show you can go back to the Shows and Plays managment by writing b on the Show ID");
+            Console.WriteLine("Choose a Show from the following list");
+            ShowAllShowsList();
+            Console.WriteLine("Enter Show ID:");
+            string ShowID = Console.ReadLine();
+            if (ShowID == "b")
+            {
+                OpenShowsAndPlaysMannagment();
+            }
+            else
+            {
 
+                while (!showDB.Find(ShowID))
+                {
+                    Console.WriteLine("Invalid Show");
+                    Console.WriteLine("Choose a Show from the following list");
+                    ShowAllShowsList();
+                    Console.WriteLine("Enter Show ID:");
+                    ShowID = Console.ReadLine();
+                }
+
+                s = new Show(showDB.FindRow(ShowID));
+
+                Actor a = null;
+                do
+                {
+                    Console.WriteLine("Please Enter a show Actor ID");
+                    string ID = Console.ReadLine();
+                    if (workerDB.Find(ID))
+                    {
+                        if (new Worker(workerDB.FindRow(ID)).type == EmployeesType.Actor)
+                        {
+                            a = new Actor(workerDB.FindRow(ID));
+                        }
+                        else
+                        {
+                            Console.WriteLine("Worker is not a register Actor");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Could not find worker ID");
+                    }
+                } while (a == null);
+
+                string Role = "";
+                do
+                {
+                    Console.WriteLine("Enter {0} {1} role (Main, Secondary , Side)", a.FirstName, a.LastName);
+                    Role = Console.ReadLine();
+                } while (Role != "Main" && Role != "Secondary" && Role != "Side");
+
+                ActorInShowRole RealRole = Role == "Main" ? ActorInShowRole.Main : Role == "Secondary" ? ActorInShowRole.Secondary : ActorInShowRole.Side;
+
+                ActorsInShow ais = new ActorsInShow();
+                ais.Actor = a;
+                ais.Show = s;
+                ais.Role = RealRole;
+                ais.ID = Guid.NewGuid().ToString().Substring(0, 7);
+
+                actorInShowDB.AddActorsInShow(ais);
+                Console.WriteLine("Actor added scssfully");
+
+
+                OpenShowsAndPlaysMannagment();
+            }
         }
         private void ShowAllPlayList()
         {
@@ -293,6 +407,14 @@ namespace Main
             foreach (var play in playDB.GetAllPlays())
             {
                 Console.WriteLine("-> " + play.ToString());
+            }
+        }
+
+        private void ShowAllShowsList()
+        {
+            foreach (var s in showDB.GetAllShows())
+            {
+                Console.WriteLine(s.ToString());
             }
         }
 
