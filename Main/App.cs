@@ -71,11 +71,158 @@ namespace Main
             }
         }
 
+        #region Customer and subscription managmaeent
+
         private void OpenCustomerAndSubscriptionMannagment()
+        {
+            Console.WriteLine("");
+            Console.WriteLine("Welcome to Customer and subscription managament, please choose an action from the following list(q to quit, b to go back to the main screen)");
+            Console.WriteLine("To add a new customer, Press 1.");
+            Console.WriteLine("To add a new subscription to and buy tickets , Press 2.");
+            string Choice = Console.ReadLine().ToLower();
+
+            switch (Choice)
+            {
+                case "q": return;
+
+                case "b": InitApp();
+                    break;
+                case "1": AddNewCustomer();
+                    break;
+                case "2": AddSubscriptionToCustomer();
+                    break;             
+                default: Console.WriteLine("Invalid choice"); OpenShowsAndPlaysMannagment();
+                    break;
+            }
+        }
+        private void AddNewCustomer()
+        {
+            Console.WriteLine("You chosse to add a new customer, to go back to the customer subscriptionn page write b on the customer name column");
+            Console.WriteLine("Enter customer name:");
+            string c_Name = Console.ReadLine();
+            if (c_Name == "b")
+            {
+                OpenCustomerAndSubscriptionMannagment();
+            }
+            else
+            {
+                string C_Type = "";
+                while (C_Type != "Private" && C_Type != "VIP" && C_Type != "Institutional")
+                {
+                    Console.WriteLine("Enter the customer type( Private,VIP,Institutional ):");
+                    C_Type = Console.ReadLine();
+                }
+
+                CustomerType realCustomerType = CustomerType.Private;
+                switch (C_Type)
+                {
+                    case "Private": realCustomerType = CustomerType.Private;
+                        break;
+                    case "VIP": realCustomerType = CustomerType.VIP;
+                        break;
+                    case "Institutional": realCustomerType = CustomerType.Institutional;
+                        break;
+                }
+                Customer c = new Customer();
+                c.ID = Guid.NewGuid().ToString().Substring(0, 7);
+                c.c_Name = c_Name;
+                c.Type = realCustomerType;
+                customerDB.AddCustomer(c);
+                Console.WriteLine("Customer Added");
+                OpenCustomerAndSubscriptionMannagment();
+            }
+        }
+        private void AddSubscriptionToCustomer()
+        {
+            int PaymentCounter = 0;
+            string C_ID;
+            do
+            {
+                Console.WriteLine("Please enter customer ID from the following list:");
+                foreach (var c in customerDB.GetAllCustomers())
+                {
+                    Console.WriteLine(c.ToString());
+                }
+                C_ID = Console.ReadLine();
+            } while (!customerDB.Find(C_ID));
+
+            Customer customer = new Customer(customerDB.FindRow(C_ID));
+
+            Console.WriteLine("Adding subscription to customer, please enter the shows and tickets you want to see from the follwing list, enter q on the show id to stop");
+            Subscription sub = new Subscription();
+            sub.Customer = customer;
+            sub.ID = Guid.NewGuid().ToString().Substring(0, 7);
+            subscriptionDB.AddSubscription(sub);
+
+            string ShowID = "";
+            while (ShowID != "q")
+            {
+                Console.WriteLine("Please enter show id from the follwoing list:");
+                foreach (var s in showDB.GetAllShows().Where(s => s.AtDate >= DateTime.Now).ToList())
+                {
+                    Console.WriteLine(s.ToString());
+                }
+                ShowID = Console.ReadLine();
+                if (ShowID != "q" && showDB.Find(ShowID))
+                {
+                    Show s = new Show(showDB.FindRow(ShowID));
+                    int NumberOfTickets = 0;
+                    do
+                    {
+                        Console.WriteLine("Please enter the number of tickets that you want from the show");
+                    } while (!int.TryParse(Console.ReadLine(), out NumberOfTickets));
+
+                    for (int i = 0; i < NumberOfTickets; i++)
+                    {
+                        Ticket t = new Ticket();
+
+                        int RowNumber = 0;
+                        int SitInRow = 0;
+                        do
+                        {
+                            Console.WriteLine("Enter the requested sit row( max rows in auditruim {0}): ", s.PlayPlace.NumberOfRows);
+                        } while (!int.TryParse(Console.ReadLine(), out RowNumber));
+                        do
+                        {
+                            Console.WriteLine("Enter the requested location in row(max number of sits in row {0}): ", s.PlayPlace.NumberOfSitsInRow);
+                        } while (!int.TryParse(Console.ReadLine(), out SitInRow));
+
+                        t = ticketDB.GetTicketByShowAndLocation(s, RowNumber, SitInRow);
+                        if (ticketSubscrioptionDB.TestIfSitIsOpen(s, RowNumber, SitInRow) && t != null)
+                        {
+                            TicketSubscription ts = new TicketSubscription();
+                            ts.ticket = t;
+                            ts.Subscription = sub;
+                            ts.ID = Guid.NewGuid().ToString().Substring(0, 7);
+                            ticketSubscrioptionDB.AddTicketSubscription(ts);
+                            Console.WriteLine("Added ticket");
+                            PaymentCounter++;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Could not buy ticket");
+                        }
+
+                    }
+                }
+
+
+            }
+
+            Console.WriteLine("Done Buying tickets , cutomer needs to pay {0} NIS",ticketSubscrioptionDB.CalcPaymentForCustomer(customer,PaymentCounter));
+
+            OpenCustomerAndSubscriptionMannagment();
+        }
+
+        private void BuyTicketToAShow()
+        {
+        }
+        private void FullInformationaboutCustomer()
         {
 
         }
 
+        #endregion
 
         #region Shows And Plays managgment
         private void OpenShowsAndPlaysMannagment()
@@ -238,14 +385,14 @@ namespace Main
                 }
                 else
                 {
-                    Console.WriteLine("All possible auditruioms :");
+                    Console.WriteLine("All possible auditriums :");
                     int index = 1;
                     foreach (Auditorium a in allAvialbeAuditriums)
                     {
                         Console.WriteLine("{0}) -> {1}", index, a.ToString());
                         index++;
                     }
-                    Console.WriteLine("Please write the auditrium number");
+                    Console.WriteLine("Please write the auditrium index number from the above list");
                     string ans = Console.ReadLine();
                     if (int.TryParse(ans, out index))
                     {
@@ -260,18 +407,19 @@ namespace Main
                             s.FromTime = HourStartOFTheShow;
                             s.ToTime = HourEndOFTheShow;
                             showDB.AddShow(s);
-                            Console.WriteLine("Show added!");
+                            Console.WriteLine("Show added! --> Adding auditoruim tickets to the db, this may take few mintis");
+                            AddTicketsToShow(s);
                             OpenShowsAndPlaysMannagment();
                         }
                         else
                         {
-                            Console.WriteLine("Error- not a valid auditorui number");
+                            Console.WriteLine("Error- not a valid auditorium number");
                             OpenShowsAndPlaysMannagment();
                         }
                     }
                     else
                     {
-                        Console.WriteLine("Error- not a valid auditorui number");
+                        Console.WriteLine("Error- not a valid auditorium number");
                         OpenShowsAndPlaysMannagment();
                     }
                 }
@@ -291,9 +439,10 @@ namespace Main
             if (PlayID == "b")
             {
                 OpenShowsAndPlaysMannagment();
-            }else
+            }
+            else
             {
-                while(!playDB.Find(PlayID))
+                while (!playDB.Find(PlayID))
                 {
                     Console.WriteLine("Did not find any play with that id, please write the play ID again:");
                     PlayID = Console.ReadLine();
@@ -309,14 +458,14 @@ namespace Main
                 Console.WriteLine(p.ToString());
                 Console.WriteLine();
                 Console.WriteLine("List of play's shows:");
-               
+
                 foreach (var sop in ShowsOfPlay)
                 {
                     Console.WriteLine(sop.ToString());
                 }
                 Console.WriteLine();
                 Console.WriteLine("List of all time play's actors: ");
-                foreach(var ais in ActorInShowOfPlay)
+                foreach (var ais in ActorInShowOfPlay)
                 {
                     Console.WriteLine(ais.ToString());
                 }
@@ -325,7 +474,7 @@ namespace Main
 
 
                 OpenShowsAndPlaysMannagment();
-               
+
 
             }
         }
@@ -473,6 +622,22 @@ namespace Main
                 OpenShowsAndPlaysMannagment();
             }
 
+        }
+
+        private void AddTicketsToShow(Show s)
+        {
+            Ticket t = new Ticket();
+            for (var i = 1; i < s.PlayPlace.NumberOfRows; i++)
+            {
+                for (int j = 0; j < s.PlayPlace.NumberOfSitsInRow; j++)
+                {
+                    t = new Ticket();
+                    t.RowNumber = i;
+                    t.LocationInRow = j;
+                    t.Show = s;
+                    ticketDB.AddTicket(t);
+                }
+            }
         }
         #endregion
 

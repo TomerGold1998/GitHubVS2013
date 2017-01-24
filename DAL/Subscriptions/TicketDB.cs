@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DBAcsses;
 using System.Data;
+using DAL.Shows;
 
 namespace DAL.Subscriptions
 {
@@ -39,6 +40,14 @@ namespace DAL.Subscriptions
             base.AddRow(t);
         }
 
+        public Ticket GetTicketByShowAndLocation(Show s, int RowNumber, int LocationInRow)
+        {
+            List<Ticket> allTs =  GetAllTickets().Where(t => t.Show.ID == s.ID && t.RowNumber == RowNumber && t.LocationInRow == LocationInRow).ToList();
+            if (allTs.Count == 0)
+                return null;
+            else
+                return allTs[0];
+        }
         public List<Ticket> GetAllTickets()
         {
             try

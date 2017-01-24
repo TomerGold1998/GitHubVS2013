@@ -29,5 +29,31 @@ namespace DAL.Customers
         {
             base.AddRow(c);
         }
+
+        public List<Customer> GetAllCustomers()
+        {
+            try
+            {
+                this.GoToFirst();
+                Customer Current = new Customer();
+                List<Customer> list = new List<Customer>();
+
+                for (int i = 0; i < this.LengthOfTable; i++)
+                {
+                    Current = this.GetCurrentRowData();
+                    if (Current != null)
+                    {
+                        list.Add(Current);
+                        this.MoveNext();
+                    }
+                }
+
+                return list;
+            }
+            catch (Exception ex)
+            {
+                return new List<Customer>();
+            }
+        }
     }
 }

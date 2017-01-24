@@ -26,6 +26,11 @@ namespace DAL.Subscriptions
             this.ticket = new Ticket(dataRow.GetParentRow(TicketRelation));
         }
 
+        public TicketSubscription()
+        {
+            // TODO: Complete member initialization
+        }
+
         public void populate(System.Data.DataRow dataRow)
         {
             dataRow["ID"] = this.ID;

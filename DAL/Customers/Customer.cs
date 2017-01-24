@@ -30,6 +30,10 @@ namespace DAL.Customers
             dataRow["c_Name"] = this.c_Name;
             dataRow["Type"] = this.Type.ToString();
         }
+        public override string ToString()
+        {
+            return String.Format("{0} - Name : {1} Type {2}", this.ID, this.c_Name, this.Type.ToString());
+        }
     }
 
   public enum CustomerType {

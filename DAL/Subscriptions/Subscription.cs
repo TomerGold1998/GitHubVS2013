@@ -21,6 +21,11 @@ namespace DAL.Subscriptions
             this.Customer = new Customer(dr.GetParentRow(CustomerRelation));
         }
 
+        public Subscription()
+        {
+            // TODO: Complete member initialization
+        }
+
         public void populate(DataRow dataRow)
         {
             dataRow["ID"] = this.ID;

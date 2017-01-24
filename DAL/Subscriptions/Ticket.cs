@@ -28,6 +28,7 @@ namespace DAL.Subscriptions
 
         public Ticket()
         {
+            TicketID = Guid.NewGuid().ToString();
             // TODO: Complete member initialization
         }
 
